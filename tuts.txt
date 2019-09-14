@@ -1,0 +1,15 @@
+git cloned django-react-boilerplate  from my repo and DJecommerce from just django's repo
+made a virtualenv env and activated it
+openeD two terminals -1 for python other for node
+pip installed -r requirements.txt   ||  npm i
+python manage.py runserver          ||  npm run start
+copy pasteD item from react semantic ui to ProductList container and converted it to a class based component exported it
+in routes.js imported it and made a route to display it
+python manage.py migrate and createdsuperuser
+added link to ProductList in layout.js
+made a constants.js file in src
+copy pasted core folder from django-ecomm to our dir
+deleted migrations in core , added  core to base.py installed apps , pip installed all those dependecies we dont have installed
+then python manage.py makemigrations core
+inside core made a new folder api and a views.py in it and a serializers.py ,urls.py {mapped the api view to url}
+then modified the home/urls.py otherwise image wont load 500 error
