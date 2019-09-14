@@ -13,3 +13,10 @@ deleted migrations in core , added  core to base.py installed apps , pip install
 then python manage.py makemigrations core
 inside core made a new folder api and a views.py in it and a serializers.py ,urls.py {mapped the api view to url}
 then modified the home/urls.py otherwise image wont load 500 error
+then made the add-to-cart api view and then mapped it in urls.py
+made a constants url for that and brought that into ProductList
+ made  a utils.js in src to have authAxios
+then made a cart.js in actions and cart.js in reducers  and imported cartReducer in index.js and combinedreducer as cart
+in layout.js modified mapStateToProps and render
+made the order serializer and orderitem serializer then made the orderdetial view mappedit
+then modified constants,cart.js(both),layout.js,ProductList.js

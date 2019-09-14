@@ -12,7 +12,8 @@ import {
   Loader,
   Message
 } from "semantic-ui-react";
-import { productListURL } from "../constants";
+import { productListURL, addToCartURL } from "../constants";
+import { authAxios } from "../utils";
 
 //TO DISPLAY LIST OF PRODUCTS
 class ProductList extends React.Component {
@@ -27,7 +28,7 @@ class ProductList extends React.Component {
     axios
       .get(productListURL) //this will fetch data from the api
       .then(res => {
-        console.log(res.data);
+        //console.log(res.data);
         this.setState({
           data: res.data,
           loading: false
@@ -37,6 +38,22 @@ class ProductList extends React.Component {
         this.setState({ error: err, loading: false });
       });
   }
+
+  //THIS WILL SEND A MESSAGE TO API THAT WE HAVE ADDED THAT PARTICULAR ITEM IN OUR CART
+  handleAddToCart = slug => {
+    this.setState({ loading: true });
+    authAxios
+      .post(addToCartURL, { slug }) //this will send data to the api
+      .then(res => {
+        console.log(res.data);
+        this.setState({
+          loading: false
+        });
+      })
+      .catch(err => {
+        this.setState({ error: err, loading: false });
+      });
+  };
 
   render() {
     const { error, data, loading } = this.state; //OBJECT DESTRUCTURING
@@ -75,7 +92,13 @@ class ProductList extends React.Component {
                   </Item.Meta>
                   <Item.Description>{item.description}</Item.Description>
                   <Item.Extra>
-                    <Button primary floated="right" icon labelPosition="right">
+                    <Button
+                      primary
+                      floated="right"
+                      icon
+                      labelPosition="right"
+                      onClick={() => this.handleAddToCart(item.slug)}
+                    >
                       Add To Cart
                       <Icon name="add to cart" />
                     </Button>
