@@ -1,4 +1,4 @@
-# Django React Boilerplate
+# ECOMMERCE DJANGO REACT
 
 
 
