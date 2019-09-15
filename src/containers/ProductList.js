@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import { connect } from "react-redux";
 import {
   Button,
   Container,
@@ -14,6 +15,7 @@ import {
 } from "semantic-ui-react";
 import { productListURL, addToCartURL } from "../constants";
 import { authAxios } from "../utils";
+import { fetchCart } from "../store/actions/cart";
 
 //TO DISPLAY LIST OF PRODUCTS
 class ProductList extends React.Component {
@@ -45,7 +47,7 @@ class ProductList extends React.Component {
     authAxios
       .post(addToCartURL, { slug }) //this will send data to the api
       .then(res => {
-        console.log(res.data);
+        this.props.fetchCart(); //this will update the cart count imediately without refeshin the page
         this.setState({
           loading: false
         });
@@ -125,5 +127,13 @@ class ProductList extends React.Component {
     );
   }
 }
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchCart: () => dispatch(fetchCart())
+  };
+};
 
-export default ProductList;
+export default connect(
+  null,
+  mapDispatchToProps
+)(ProductList);

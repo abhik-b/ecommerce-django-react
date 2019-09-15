@@ -52,6 +52,8 @@ class AddToCartView(APIView):
             order.items.add(order_item)
             return Response(status=HTTP_200_OK)
 
+# ORDER DETAIL API VIEW
+
 
 class OrderDetailView(RetrieveAPIView):
     serializer_class = OrderSerializer
