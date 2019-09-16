@@ -2,6 +2,8 @@
 
 from .base import *
 
+from decouple import config
+
 ALLOWED_HOSTS += ['127.0.0.1']
 DEBUG = True
 
@@ -17,3 +19,7 @@ DATABASES = {
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
 )
+
+# stripe
+STRIPE_PUBLIC_KEY = config("STRIPE_TEST_PUBLIC_KEY")
+STRIPE_SECRET_KEY = config("STRIPE_TEST_SECRET_KEY")

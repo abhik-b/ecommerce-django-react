@@ -104,17 +104,27 @@ class ProductList extends React.Component {
                       Add To Cart
                       <Icon name="add to cart" />
                     </Button>
-                    {item.discount_price && ( //IF ITEM HAS A DISCOUNT PRICE THEN IT WILL DISPLAY LABELS
-                      <Label
-                        color={
-                          item.label === "danger"
-                            ? "red"
-                            : item.label === "secondary"
-                            ? "blue"
-                            : "pink"
-                        }
-                      >
-                        {item.discount_price}
+                    {item.discount_price ? ( //IF ITEM HAS A DISCOUNT PRICE THEN IT WILL DISPLAY LABELS
+                      <div>
+                        {" "}
+                        <Label
+                          color={
+                            item.label === "danger"
+                              ? "red"
+                              : item.label === "secondary"
+                              ? "blue"
+                              : "pink"
+                          }
+                        >
+                          On DISCOUNT :
+                        </Label>
+                        <Label tag color="teal">
+                          ₹ {item.discount_price}
+                        </Label>
+                      </div>
+                    ) : (
+                      <Label color="teal" tag>
+                        ₹ {item.price}
                       </Label>
                     )}
                   </Item.Extra>

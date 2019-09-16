@@ -8,6 +8,7 @@ import {
   Menu,
   Table
 } from "semantic-ui-react";
+import { Link } from "react-router-dom";
 import { authAxios } from "../utils";
 import { orderSummaryURL } from "../constants";
 class OrderSummary extends Component {
@@ -55,7 +56,7 @@ class OrderSummary extends Component {
                 return (
                   <Table.Row key={order_item.id}>
                     <Table.Cell>
-                      <Label circular color="red">
+                      <Label circular color="blue">
                         {i + 1}
                       </Label>
                     </Table.Cell>
@@ -64,8 +65,8 @@ class OrderSummary extends Component {
                     <Table.Cell>{order_item.quantity}</Table.Cell>
                     <Table.Cell>
                       {order_item.item_obj.discount_price && (
-                        <Label color="green" ribbon="right">
-                          ON DISCAU
+                        <Label color="green" ribbon>
+                          ON DISCOUNT
                         </Label>
                       )}
                       ₹{order_item.final_price}
@@ -77,8 +78,8 @@ class OrderSummary extends Component {
                 <Table.Cell />
                 <Table.Cell />
                 <Table.Cell />
-                <Table.Cell colSpan="4" textAlign="center">
-                  Total : {data.total}
+                <Table.Cell colSpan="4" textAlign="right">
+                  Order Total :₹ {data.total}
                 </Table.Cell>
               </Table.Row>
             </Table.Body>
@@ -86,9 +87,11 @@ class OrderSummary extends Component {
             <Table.Footer>
               <Table.Row>
                 <Table.HeaderCell colSpan="5">
-                  <Button color="yellow" floated="right" textAlign="right">
-                    Check This OUT
-                  </Button>
+                  <Link to="/checkout">
+                    <Button color="yellow" floated="right" textAlign="right">
+                      Check This OUT
+                    </Button>
+                  </Link>
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Footer>

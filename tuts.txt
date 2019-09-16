@@ -24,3 +24,16 @@ then modified constants,cart.js(both),layout.js,ProductList.js an addtocart work
 
 made a container ordersummary , brought it to routes.js modified serializers
 modified layout.js for displaying logout cart after logged in
+
+npm i --save react-stripe-elements 
+added this "<script src="https://js.stripe.com/v3/"></script>" to index.html
+made a checkout.js
+made a paymentview class api
+made a constants for checkout url
+pip installed stripe,python-decouple
+made a .env file and stored our public and secret key init
+then in dev.py from decouple imported config and pasted this->
+                        STRIPE_PUBLIC_KEY = config("STRIPE_TEST_PUBLIC_KEY")
+                        STRIPE_SECRET_KEY = config("STRIPE_TEST_SECRET_KEY")
+in views.py ->stripe.api_key = settings.STRIPE_SECRET_KEY
+then modified checkout.js and views.py api
