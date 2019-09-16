@@ -6,7 +6,8 @@ import {
   Icon,
   Label,
   Menu,
-  Table
+  Table,
+  Message
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { authAxios } from "../utils";
@@ -28,7 +29,14 @@ class OrderSummary extends Component {
         this.setState({ data: res.data, loading: false });
       })
       .catch(err => {
-        this.setState({ error: err, loading: false });
+        if (err.response.status === 404) {
+          this.setState({
+            error: "you currently dont have any order",
+            loading: false
+          });
+        } else {
+          this.setState({ error: err, loading: false });
+        }
       });
   };
   render() {
@@ -39,6 +47,13 @@ class OrderSummary extends Component {
         <Header as="h1" textAlign="center">
           Order Summary
         </Header>
+        {error && (
+          <Message
+            error
+            header="There was an error"
+            content={JSON.stringify(error)}
+          />
+        )}
         {data && (
           <Table celled>
             <Table.Header>

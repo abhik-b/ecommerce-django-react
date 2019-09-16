@@ -118,7 +118,7 @@ class ProductList extends React.Component {
                         >
                           On DISCOUNT :
                         </Label>
-                        <Label tag color="teal">
+                        <Label tag color="green">
                           ₹ {item.discount_price}
                         </Label>
                       </div>

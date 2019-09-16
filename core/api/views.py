@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, get_object_or_404
+from django.http import Http404
 from django.utils import timezone
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -70,7 +71,8 @@ class OrderDetailView(RetrieveAPIView):
             order = Order.objects.get(user=self.request.user, ordered=False)
             return order
         except ObjectDoesNotExist:
-            return Response({'message': "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
+            raise Http404("You do not have an active order")
+            # return Response({'message': "You do not have an active order"}, status=HTTP_400_BAD_REQUEST)
 
 
 class PaymentAPIView(APIView):
@@ -106,14 +108,14 @@ class PaymentAPIView(APIView):
                 # charge the customer because we cannot charge the token more than once
                 charge = stripe.Charge.create(
                     amount=amount,  # cents
-                    currency="usd",
+                    currency="inr",
                     customer=userprofile.stripe_customer_id
                 )
             else:
                 # charge once off on the token
                 charge = stripe.Charge.create(
                     amount=amount,  # cents
-                    currency="usd",
+                    currency="inr",
                     source=token
                 )
              # create the payment
