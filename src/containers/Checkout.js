@@ -8,17 +8,123 @@ import {
   Item,
   Divider,
   Header,
-  Label
+  Label,
+  Checkbox,
+  Form,
+  Segment,
+  Dimmer,
+  Loader,
+  Image
 } from "semantic-ui-react";
 import { authAxios } from "../utils";
 import { checkoutURL } from "../constants";
-import { orderSummaryURL } from "../constants";
+import { orderSummaryURL, addCouponURL } from "../constants";
 
-class OrderPreview extends Component {
+const OrderPreview = props => {
+  const { data } = props;
+  console.log(data);
+  return (
+    <React.Fragment>
+      {data && (
+        <React.Fragment>
+          <Item.Group relaxed>
+            {data.order_items.map((order_item, i) => {
+              return (
+                <Item key={i}>
+                  <Item.Image
+                    size="tiny"
+                    src={`http://127.0.0.1:8000${order_item.item_obj.image}`}
+                  />
+                  <Item.Content verticalAlign="middle">
+                    <Item.Header as="a">
+                      {order_item.quantity} x {order_item.item}
+                    </Item.Header>
+                    <Item.Extra>
+                      <Label tag>₹{order_item.final_price}</Label>
+                      {order_item.item_obj.discount_price && (
+                        <Label color="pink">ON DISCOUNT</Label>
+                      )}
+                    </Item.Extra>
+                  </Item.Content>
+                </Item>
+              );
+            })}
+          </Item.Group>
+
+          <Item.Group>
+            <Item>
+              <Item.Content>
+                <Item.Header>
+                  <Label tag color="orange">
+                    ORDER TOTAL:
+                  </Label>
+                  <Label color="blue">₹{data.total}</Label>
+                  {data.coupon && (
+                    <Label color="green">
+                      Current coupon: {data.coupon.code} for ₹
+                      {data.coupon.amount}
+                    </Label>
+                  )}
+                </Item.Header>
+              </Item.Content>
+            </Item>
+          </Item.Group>
+        </React.Fragment>
+      )}
+    </React.Fragment>
+  );
+};
+
+class CouponForm extends Component {
   state = {
+    code: ""
+  };
+
+  handleChange = e => {
+    this.setState({
+      code: e.target.value
+    });
+  };
+  handleSubmit = e => {
+    const { code } = this.state;
+    this.props.handleAddCouppon(e, code);
+    this.setState({ code: "" });
+  };
+  render() {
+    const { code } = this.state;
+    return (
+      <div>
+        <Form onSubmit={this.handleSubmit}>
+          <Form.Field>
+            <Header as="h4">Coupon Code</Header>
+            <input
+              placeholder="Enter a coupon if u have one ..... !"
+              value={code}
+              onChange={this.handleChange}
+            />
+          </Form.Field>
+          {/* <Form.Field>
+          <label>Last Name</label>
+          <input placeholder="Last Name" />
+        </Form.Field>
+        <Form.Field>
+          <Checkbox label="I agree to the Terms and Conditions" />
+        </Form.Field> */}
+          <Button color="violet" type="submit">
+            Submit
+          </Button>
+        </Form>
+      </div>
+    );
+  }
+}
+
+class Checkout extends Component {
+  state = {
+    data: null,
     loading: false,
     error: null,
-    data: null
+    success: false
   };
   componentDidMount() {
     this.handleFetchOrder();
@@ -41,49 +147,18 @@ class OrderPreview extends Component {
         }
       });
   };
-  render() {
-    const { data, error, loading } = this.state;
-    console.log(data);
-    return (
-      <Item.Group>
-        {data && (
-          <div>
-            {data.order_items.map((order_item, i) => {
-              return (
-                <Item>
-                  <Item.Content key={order_item.id}>
-                    <Item.Header as="h4">
-                      {order_item.quantity} x {order_item.item}
-                    </Item.Header>
-                    <Item.Meta>
-                      Final Price : ₹{order_item.final_price}
-                      {order_item.item_obj.discount_price && (
-                        <Label color="green" tag>
-                          ON DISCOUNT
-                        </Label>
-                      )}
-                    </Item.Meta>
-
-                    <Divider />
-                  </Item.Content>
-                </Item>
-              );
-            })}
-            <Header>Order Total :₹ {data.total}</Header>
-          </div>
-        )}
-      </Item.Group>
-    );
-  }
-}
-
-// export default OrderPreview;
-
-class Checkout extends Component {
-  state = {
-    loading: false,
-    error: null,
-    success: false
+  handleAddCouppon = (e, code) => {
+    e.preventDefault();
+    this.setState({ loading: true });
+    authAxios
+      .post(addCouponURL, { code })
+      .then(res => {
+        this.setState({ loading: false });
+        this.handleFetchOrder();
+      })
+      .catch(err => {
+        this.setState({ error: err, loading: false });
+      });
   };
   //USER CLICKED SUBMIT
   submit = ev => {
@@ -109,7 +184,7 @@ class Checkout extends Component {
   };
 
   render() {
-    const { error, loading, success } = this.state;
+    const { data, error, loading, success } = this.state;
     return (
       <div>
         {error && (
@@ -118,12 +193,26 @@ class Checkout extends Component {
             <p>{JSON.stringify(error)}</p>
           </Message>
         )}
+
+        {loading && (
+          <Segment>
+            <Dimmer active inverted>
+              <Loader inverted content="Loading" />
+            </Dimmer>
+
+            <Image src="/images/wireframe/short-paragraph.png" />
+          </Segment>
+        )}
         {success && (
           <Message positive>
             <Message.Header>Successfull</Message.Header>
           </Message>
         )}
-        <OrderPreview />
+        <OrderPreview data={data} />
+        <Divider />
+        <CouponForm
+          handleAddCouppon={(e, code) => this.handleAddCouppon(e, code)}
+        />
         <Divider />
         <Header>Would you like to complete the purchase?</Header>
         <CardElement />

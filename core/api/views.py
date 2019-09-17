@@ -165,3 +165,25 @@ class PaymentAPIView(APIView):
             return Response({'message': "Serious error occured"}, status=HTTP_400_BAD_REQUEST)
 
         return Response({'message': "Invalid data recieved"}, status=HTTP_400_BAD_REQUEST)
+
+
+# def get_coupon(request, code):
+#     try:
+
+#         return coupon
+#     except ObjectDoesNotExist:
+#         return Response({'message': "Coupon does not exist"}, status=HTTP_400_BAD_REQUEST)
+
+
+class AddCouponView(APIView):
+    def post(self, request, *args, **kwargs):
+        code = request.data.get('code', None)
+        if code is None:
+            return Response({'message': "Invalid data recieved"}, status=HTTP_400_BAD_REQUEST)
+
+        order = Order.objects.get(
+            user=self.request.user, ordered=False)
+        coupon = get_object_or_404(Coupon, code=code)
+        order.coupon = coupon
+        order.save()
+        return Response({'message': "Succesfully added coupon"}, status=HTTP_200_OK)

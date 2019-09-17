@@ -1,10 +1,18 @@
 from rest_framework import serializers
-from core.models import Item, Order, OrderItem
+from core.models import Item, Order, OrderItem, Coupon
 
 
 class StringSerializer(serializers.StringRelatedField):
     def to_internal_value(self, value):
         return value
+
+
+class CouponSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Coupon
+        fields = (
+            'id', 'code', 'amount'
+        )
 
 
 class ItemSerializer(serializers.ModelSerializer):
@@ -54,11 +62,12 @@ class OrderItemSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     order_items = serializers.SerializerMethodField()
     total = serializers.SerializerMethodField()
+    coupon = serializers.SerializerMethodField()
 
     class Meta:
         model = Order
         fields = (
-            'id', 'order_items', 'total'
+            'id', 'order_items', 'total', 'coupon'
 
         )
 
@@ -67,3 +76,8 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def get_total(self, obj):
         return obj.get_total()
+
+    def get_coupon(self, obj):
+        if obj.coupon is not None:
+            return CouponSerializer(obj.coupon).data
+        return None

@@ -37,3 +37,7 @@ then in dev.py from decouple imported config and pasted this->
                         STRIPE_SECRET_KEY = config("STRIPE_TEST_SECRET_KEY")
 in views.py ->stripe.api_key = settings.STRIPE_SECRET_KEY
 then modified checkout.js and views.py api
+
+made the addcoupon view api ,and a class to handle that in ordersummary.js
+added a form in that class ,coupon is working fine 
+adding a serializer of coupon and then modified checkout.js
