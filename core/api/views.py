@@ -3,6 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, get_object_or_404
 from django.http import Http404
 from django.utils import timezone
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
@@ -24,6 +25,8 @@ class ItemListView(ListAPIView):
     permission_classes = (AllowAny,)  # never forget this comma after AllowAny
     serializer_class = ItemSerializer
     queryset = Item.objects.all()
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['title']
 
 
 # add to cart APIView
